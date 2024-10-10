@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Capture Control</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            text-align: center;
+        }
+
+        #status-indicator {
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            display: inline-block;
+            margin-left: 10px;
+        }
+
+        .enabled {
+            background-color: green;
+        }
+
+        .disabled {
+            background-color: red;
+        }
+
+        button {
+            padding: 10px 20px;
+            font-size: 16px;
+            margin-top: 20px;
+            cursor: pointer;
+        }
+    </style>
+    <script>
+        function toggleCapture() {
+            fetch('/camera-control/toggle', { method: 'POST' })
+                .then(response => response.json())
+                .then(data => {
+                    document.getElementById('status').innerText = data.enabled ? 'Enabled' : 'Disabled';
+                    updateIndicator(data.enabled);
+                });
+        }
+
+        function fetchStatus() {
+            fetch('/camera-control/status')
+                .then(response => response.json())
+                .then(data => {
+                    document.getElementById('status').innerText = data.enabled ? 'Enabled' : 'Disabled';
+                    updateIndicator(data.enabled);
+                });
+        }
+
+        function updateIndicator(isEnabled) {
+            const indicator = document.getElementById('status-indicator');
+            if (isEnabled) {
+                indicator.classList.remove('disabled');
+                indicator.classList.add('enabled');
+            } else {
+                indicator.classList.remove('enabled');
+                indicator.classList.add('disabled');
+            }
+        }
+
+        window.onload = fetchStatus;
+    </script>
+</head>
+<body>
+    <h1>Capture Control</h1>
+    <button onclick="toggleCapture()">Toggle Capture</button>
+    <p>Status: <span id="status">Loading...</span>
+    <span id="status-indicator" class="disabled"></span></p>
+</body>
+</html>
+
