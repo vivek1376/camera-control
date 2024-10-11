@@ -15,11 +15,21 @@ log_gphoto2() {
     done
 }
 
-# Check if any cameras are detected
-if ! gphoto2 --auto-detect | grep -iq "usb:"; then
-    log "Error: No cameras detected. Please connect a camera and try again."
-    exit 1
-fi
+# old logic
+# if ! gphoto2 --auto-detect | grep -iq "usb:"; then
+#     log "Error: No cameras detected. Please connect a camera and try again."
+#     exit 1
+# fi
+
+# keep checking if any cameras are detected
+while true; do
+    if ! gphoto2 --auto-detect | grep -iq "usb:"; then
+        log "Error: No cameras detected. Please connect a camera and try again. Rechecking in 30 seconds..."
+    else
+	break
+    fi
+    sleep 30
+done
 
 log "Camera detected. Starting infinite capture loop."
 

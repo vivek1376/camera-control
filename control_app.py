@@ -15,7 +15,8 @@ def toggle():
 
 @app.route('/', methods=['GET'])
 def index():
-    return send_from_directory('.', 'index.html')
+    # return send_from_directory('.', 'index.html')
+    return send_from_directory('/home/orangepi/camera-control', 'index.html')
 
 if __name__ == '__main__':
     app.run(host='127.0.0.1', port=5001)
